@@ -43,22 +43,22 @@ private:
         double omega2 = v * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) * radius / cf;
 
         if (omega < 0) {
-            motor_rpm_[0] = omega2;
-            motor_rpm_[1] = omega1;
-            motor_rpm_[2] = omega2;
-            motor_rpm_[3] = omega1;
+            motor_rpm_[0] = omega2 * 30 / PI;
+            motor_rpm_[1] = -1 * omega1 * 30 / PI;
+            motor_rpm_[2] = omega2 * 30 / PI;
+            motor_rpm_[3] = -1 * omega1 * 30 / PI;
         }
         else if(omega > 0) {
-            motor_rpm_[0] = omega1;
-            motor_rpm_[1] = omega2;
-            motor_rpm_[2] = omega1;
-            motor_rpm_[3] = omega2;
+            motor_rpm_[0] = omega1 * 30 / PI;
+            motor_rpm_[1] = -1 * omega2 * 30 / PI;
+            motor_rpm_[2] = omega1 * 30 / PI;
+            motor_rpm_[3] = -1 * omega2 * 30 / PI;
         }
         else {
-            motor_rpm_[0] = v;
-            motor_rpm_[1] = v;
-            motor_rpm_[2] = v;
-            motor_rpm_[3] = v;
+            motor_rpm_[0] = v / cf * 30 / PI;
+            motor_rpm_[1] = v / cf * 30 / PI;
+            motor_rpm_[2] = v / cf * 30 / PI;
+            motor_rpm_[3] = v / cf * 30 / PI;
         }
     }
 
