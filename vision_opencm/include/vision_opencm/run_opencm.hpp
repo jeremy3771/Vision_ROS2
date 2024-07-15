@@ -24,7 +24,7 @@ private:
     void timer_cb();
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_;
     rclcpp::TimerBase::SharedPtr timer_;
-    int64_t motPos_[2];
+    int64_t motPos_[2] = {3073, 2048};
 };
 
 #endif
