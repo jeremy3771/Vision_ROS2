@@ -5,7 +5,7 @@
 
 #include "rclcpp/rclcpp.hpp"
 #include "geometry_msgs/msg/twist.hpp"
-#include "ddsm_ackermann/motor_command.hpp"
+#include "motion_ddsm/motor_command.hpp"
 
 using namespace std::chrono_literals;
 using std::placeholders::_1;
@@ -36,19 +36,19 @@ private:
     void twist_cb(const geometry_msgs::msg::Twist msg) {
         double v = msg.linear.x;
         double omega = msg.angular.z;
-        auto radius = v / omega;
+        auto radius = std::abs(v / omega);
         double cf = PI * wheelDiameter_;
 
-        double omega1 = v * sqrt(pow((radius - axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) * radius / cf;
-        double omega2 = v * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) * radius / cf;
+        double omega1 = v * sqrt(pow((radius - axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) / radius / cf;
+        double omega2 = v * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) / radius / cf;
 
-        if (omega < 0) {
+        if (omega < -0.01) {
             motor_rpm_[0] = omega2 * 30 / PI;
             motor_rpm_[1] = -1 * omega1 * 30 / PI;
             motor_rpm_[2] = omega2 * 30 / PI;
             motor_rpm_[3] = -1 * omega1 * 30 / PI;
         }
-        else if(omega > 0) {
+        else if(omega > 0.01) {
             motor_rpm_[0] = omega1 * 30 / PI;
             motor_rpm_[1] = -1 * omega2 * 30 / PI;
             motor_rpm_[2] = omega1 * 30 / PI;
@@ -56,9 +56,9 @@ private:
         }
         else {
             motor_rpm_[0] = v / cf * 30 / PI;
-            motor_rpm_[1] = v / cf * 30 / PI;
+            motor_rpm_[1] = -1 * v / cf * 30 / PI;
             motor_rpm_[2] = v / cf * 30 / PI;
-            motor_rpm_[3] = v / cf * 30 / PI;
+            motor_rpm_[3] = -1 * v / cf * 30 / PI;
         }
     }
 
