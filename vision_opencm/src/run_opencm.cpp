@@ -17,6 +17,10 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
         motPos_[0] = 3073 - (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 2048 / PI);
         motPos_[1] = 2048 - (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 2048 / PI);
     }
+    else {
+        motPos_[0] = 3073;
+        motPos_[1] = 2048;
+    }
 }
 void DynamixelController::timer_cb() {
     writePosition(motPos_[0], motPos_[1]);
