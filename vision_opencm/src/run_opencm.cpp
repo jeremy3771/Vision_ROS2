@@ -10,11 +10,11 @@ DynamixelController::DynamixelController() : Node("dynamixel_controller") {
 void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     double radius = std::abs(msg.linear.x / msg.angular.z);
     if (msg.angular.z < -0.01) {
-        motPos_[0] = 2048 + (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 2048 / PI);
+        motPos_[0] = 3073 + (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 2048 / PI);
         motPos_[1] = 2048 + (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 2048 / PI);
     }
     else if (msg.angular.z > 0.01) {
-        motPos_[0] = 2048 - (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 2048 / PI);
+        motPos_[0] = 3073 - (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 2048 / PI);
         motPos_[1] = 2048 - (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 2048 / PI);
     }
 }
