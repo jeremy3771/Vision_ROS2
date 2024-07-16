@@ -10,16 +10,16 @@ DynamixelController::DynamixelController() : Node("dynamixel_controller") {
 void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     double radius = std::abs(msg.linear.x / msg.angular.z);
     if (msg.angular.z < -0.01) {
-        motPos_[0] = 3073 + (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 3073 / PI);
-        motPos_[1] = 3073 + (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 3073 / PI);
+        motPos_[0] = 3072 + (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 3072 / PI);
+        motPos_[1] = 3072 + (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 3072 / PI);
     }
     else if (msg.angular.z > 0.01) {
-        motPos_[0] = 3073 - (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 3073 / PI);
-        motPos_[1] = 3073 - (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 3073 / PI);
+        motPos_[0] = 3072 - (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 3072 / PI);
+        motPos_[1] = 3072 - (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 3072 / PI);
     }
     else {
-        motPos_[0] = 3073;
-        motPos_[1] = 3073;
+        motPos_[0] = 3072;
+        motPos_[1] = 3072;
     }
 }
 void DynamixelController::timer_cb() {
