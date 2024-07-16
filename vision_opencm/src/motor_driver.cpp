@@ -1,5 +1,8 @@
 #include "vision_opencm/motor_driver.hpp"
 
+MotorCommand::MotorCommand() {
+    init();
+}
 MotorCommand::~MotorCommand() {
     close();
 }
