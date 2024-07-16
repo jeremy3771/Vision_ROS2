@@ -10,11 +10,9 @@ bool MotorCommand::init() {
     portHandler_   = dynamixel::PortHandler::getPortHandler(DEVICE_NAME);
     packetHandler_ = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
     if (portHandler_->openPort() == false) {
-        print("Failed to open Port")
         return false;
     }
     if (portHandler_->setBaudRate(baudrate_) == false) {
-        print("Failed to set BaudRate")
         return false;
     }
     setTorque(true);
