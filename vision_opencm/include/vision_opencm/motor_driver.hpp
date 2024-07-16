@@ -37,6 +37,7 @@
 
 class MotorCommand {
 public:
+    MotorCommand();
     ~MotorCommand();
     bool init();
     void close();
