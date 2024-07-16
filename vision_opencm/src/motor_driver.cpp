@@ -10,9 +10,11 @@ bool MotorCommand::init() {
     portHandler_   = dynamixel::PortHandler::getPortHandler(DEVICE_NAME);
     packetHandler_ = dynamixel::PacketHandler::getPacketHandler(PROTOCOL_VERSION);
     if (portHandler_->openPort() == false) {
+        print("Failed to open Port")
         return false;
     }
     if (portHandler_->setBaudRate(baudrate_) == false) {
+        print("Failed to set BaudRate")
         return false;
     }
     setTorque(true);
@@ -76,7 +78,7 @@ bool MotorCommand::writePosition(int64_t left_value, int64_t right_value) {
     uint8_t right_data_byte[4] = {0, };
     uint8_t zero_data_byte[4] = {0, };
 
-    int64_t zero_value = 2048;
+    int64_t zero_value = 3072 ;
     zero_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(zero_value));
     zero_data_byte[1] = DXL_LOBYTE(DXL_LOWORD(zero_value));
     zero_data_byte[2] = DXL_LOBYTE(DXL_LOWORD(zero_value));
@@ -87,19 +89,17 @@ bool MotorCommand::writePosition(int64_t left_value, int64_t right_value) {
     left_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(left_value));
     left_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(left_value));
 
-    dxl_addparam_result = groupSyncWritePosition_->addParam(DXL_F_LEFT_ID, (uint8_t*)&left_data_byte);
-    if (dxl_addparam_result != true)
-        return false;
-
     right_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(right_value));
     right_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(right_value));
     right_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(right_value));
     right_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(right_value));
-
+    
+    dxl_addparam_result = groupSyncWritePosition_->addParam(DXL_F_LEFT_ID, (uint8_t*)&left_data_byte);
+    if (dxl_addparam_result != true)
+        return false;
     dxl_addparam_result = groupSyncWritePosition_->addParam(DXL_F_RIGHT_ID, (uint8_t*)&right_data_byte);
     if (dxl_addparam_result != true)
         return false;
-
     dxl_addparam_result = groupSyncWritePosition_->addParam(DXL_M_LEFT_ID, (uint8_t*)&zero_data_byte);
     if (dxl_addparam_result != true)
         return false;
