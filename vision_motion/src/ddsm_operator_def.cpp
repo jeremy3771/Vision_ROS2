@@ -35,7 +35,7 @@ const array<uint8_t, 256> MOTOR_COMMAND::CRC8_MAXIM_table = {
     0xb6, 0xe8, 0x0a, 0x54, 0xd7, 0x89, 0x6b, 0x35
 };
 
-MOTOR_COMMAND::MOTOR_COMMAND(int num) : port(io, "/dev/ttyRS" + std::to_string(num)) {
+MOTOR_COMMAND::MOTOR_COMMAND(int num) : port(io, "/dev/ttyRS0" + std::to_string(num)) {
     port.set_option(serial_port_base::baud_rate(115200));
     port.set_option(serial_port_base::character_size(8));
     port.set_option(serial_port_base::parity(serial_port_base::parity::none));
