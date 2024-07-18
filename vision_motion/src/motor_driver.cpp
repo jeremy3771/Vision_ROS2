@@ -78,9 +78,9 @@ bool MotorCommand::writePosition(int64_t left_value, int64_t right_value) {
 
     int64_t zero_value = 3072 ;
     zero_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(zero_value));
-    zero_data_byte[1] = DXL_LOBYTE(DXL_LOWORD(zero_value));
-    zero_data_byte[2] = DXL_LOBYTE(DXL_LOWORD(zero_value));
-    zero_data_byte[3] = DXL_LOBYTE(DXL_LOWORD(zero_value));
+    zero_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(zero_value));
+    zero_data_byte[2] = DXL_LOBYTE(DXL_HIWORD(zero_value));
+    zero_data_byte[3] = DXL_HIBYTE(DXL_HIWORD(zero_value));
 
     left_data_byte[0] = DXL_LOBYTE(DXL_LOWORD(left_value));
     left_data_byte[1] = DXL_HIBYTE(DXL_LOWORD(left_value));
