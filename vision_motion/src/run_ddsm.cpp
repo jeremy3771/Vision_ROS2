@@ -12,39 +12,6 @@ using std::placeholders::_1;
 
 #define PI 3.1415926535897932
 
-    // void twist_cb(const geometry_msgs::msg::Twist msg) {
-    //     double v = msg.linear.x;
-    //     double omega = msg.angular.z;
-    //     auto radius = std::abs(v / omega);
-    //     double cf = PI * wheelDiameter_;
-
-    //     #~~~~~~~~~
-    //     double linear_vel_wheel_L = omega * sqrt(pow((radius - axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2));
-    //     double linear_vel_wheel_R = omega * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2));
-    //     # (m/s)/(2pi*r)
-    //     double rpm_L = linear_vel_wheel_L / cf;
-    //     double rpm_R = linear_vel_wheel_R / cf;
-
-    //     if (omega < -0.01) {
-    //         motor_rpm_[0] = rpm_R;
-    //         motor_rpm_[1] = -1 * rpm_L;
-    //         motor_rpm_[2] = rpm_R;
-    //         motor_rpm_[3] = -1 * rpm_L;
-    //     }
-    //     else if(omega > 0.01) {
-    //         motor_rpm_[0] = rpm_L;
-    //         motor_rpm_[1] = -1 * rpm_R;
-    //         motor_rpm_[2] = rpm_L;
-    //         motor_rpm_[3] = -1 * rpm_R;
-    //     }
-    //     else {
-    //         motor_rpm_[0] = v / 2*PI*radius;
-    //         motor_rpm_[1] = -1 * (v / 2 * PI * radius);
-    //         motor_rpm_[2] = v / 2 * PI * radius;
-    //         motor_rpm_[3] = -1 * (v / 2 * PI * radius);
-    //     }
-    // }
-
 class DDSM_Twist : public rclcpp::Node {
 public:
     DDSM_Twist() : Node("DDSM115"), port1(0), port2(2), port3(4), port4(6){
