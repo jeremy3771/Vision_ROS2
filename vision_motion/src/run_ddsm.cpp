@@ -72,8 +72,8 @@ private:
         auto radius = std::abs(v / omega);
         double cf = PI * wheelDiameter_;
 
-        double omega1 = v * sqrt(pow((radius - axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) / radius / cf;
-        double omega2 = v * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) / radius / cf;
+        double omega1 = v * sqrt(pow((radius - axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) / radius / wheelDiameter_ * 2;
+        double omega2 = v * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelbase_ / 2), 2)) / radius / wheelDiameter_ * 2;
 
         if (omega < -0.01) {
             motor_rpm_[0] = omega2 * 30 / PI;
