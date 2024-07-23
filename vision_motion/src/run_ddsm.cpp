@@ -15,8 +15,8 @@ using std::placeholders::_1;
 class DDSM_Twist : public rclcpp::Node {
 public:
     DDSM_Twist() : Node("DDSM115"), port1(0), port2(2), port3(4), port4(6){
-        declare_parameter("WB", 0.3);
-        declare_parameter("AW", 0.2);
+        declare_parameter("WB", 0.47);
+        declare_parameter("AW", 0.38);
         declare_parameter("WD", 0.1);
         get_parameter("WB", wheelbase_);
         get_parameter("AW", axleWidth_);
