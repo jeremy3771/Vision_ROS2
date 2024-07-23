@@ -60,16 +60,20 @@ private:
 
 
         if (omega < -0.01) {
-            motor_rpm_[0] = omega2 * 30 / PI;
-            motor_rpm_[1] = -1 * omega1 * 30 / PI;
-            motor_rpm_[2] = omega2 * 30 / PI;
-            motor_rpm_[3] = -1 * omega1 * 30 / PI;
+            motor_rpm_[0] = wheel_omega[1] * 30 / PI;
+            motor_rpm_[1] = -1 * wheel_omega[0] * 30 / PI;
+            motor_rpm_[2] = wheel_omega[3] * 30 / PI;
+            motor_rpm_[3] = -1 * wheel_omega[2] * 30 / PI;
+            motor_rpm_[4] = wheel_omega[5] * 30 / PI;
+            motor_rpm_[5] = -1 * wheel_omega[4] * 30 / PI;
         }
         else if(omega > 0.01) {
-            motor_rpm_[0] = omega1 * 30 / PI;
-            motor_rpm_[1] = -1 * omega2 * 30 / PI;
-            motor_rpm_[2] = omega1 * 30 / PI;
-            motor_rpm_[3] = -1 * omega2 * 30 / PI;
+            motor_rpm_[0] = wheel_omega[0] * 30 / PI;
+            motor_rpm_[1] = -1 * wheel_omega[1] * 30 / PI;
+            motor_rpm_[2] = wheel_omega[2] * 30 / PI;
+            motor_rpm_[3] = -1 * wheel_omega[3] * 30 / PI;
+            motor_rpm_[4] = wheel_omega[4] * 30 / PI;
+            motor_rpm_[5] = -1 * wheel_omega[5] * 30 / PI;
         }
         else {
             motor_rpm_[0] = (60 * v) / (wheelDiameter_ * PI);
