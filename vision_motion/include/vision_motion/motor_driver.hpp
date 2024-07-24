@@ -42,7 +42,7 @@ public:
     bool init();
     void close();
     bool setTorque(bool enable);
-    bool writePosition(int64_t left_value, int64_t right_value);
+    bool writePosition(const int64_t value[6]);
 private:
     uint32_t baudrate_;
     dynamixel::PortHandler *portHandler_;
