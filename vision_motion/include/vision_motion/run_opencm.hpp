@@ -12,7 +12,7 @@
 #include "geometry_msgs/msg/twist.hpp"
 #include "vision_motion/motor_driver.hpp"
 
-#define PI                              3.141592653589793
+#define PI 3.141592653589793
 
 class DynamixelController : public rclcpp::Node, MotorCommand {
 public:
