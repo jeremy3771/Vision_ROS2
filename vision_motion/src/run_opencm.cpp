@@ -18,7 +18,7 @@ DynamixelController::DynamixelController() : Node("dynamixel_controller") {
 }
 void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     double radius = std::abs(msg.linear.x / msg.angular.z);
-    if (msg.angular.z < -0.01) {
+    if (msg.angular.z < -0.01 && radius > 0.01) {
         motPos_[0] = 3073 + (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
         motPos_[1] = 3073 + (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
         motPos_[2] = 3073 + (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 3073 / PI);
@@ -26,7 +26,7 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
         motPos_[4] = 3073 + (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 3073 / PI);
         motPos_[5] = 3073 + (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 3073 / PI);
     }
-    else if (msg.angular.z > 0.01) {
+    else if (msg.angular.z > 0.01 && radius > 0.01) {
         motPos_[0] = 3073 - (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
         motPos_[1] = 3073 - (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
         motPos_[2] = 3073 - (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 3073 / PI);
