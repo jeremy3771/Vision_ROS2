@@ -10,20 +10,32 @@ DynamixelController::DynamixelController() : Node("dynamixel_controller") {
 void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     double radius = std::abs(msg.linear.x / msg.angular.z);
     if (msg.angular.z < -0.01) {
-        motPos_[0] = 3073 + (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 3073 / PI);
-        motPos_[1] = 3073 + (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 3073 / PI);
+        motPos_[0] = 3073 + (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[1] = 3073 + (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[2] = 3073 + (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[3] = 3073 + (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[4] = 3073 + (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[5] = 3073 + (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 3073 / PI);
     }
     else if (msg.angular.z > 0.01) {
-        motPos_[0] = 3073 - (std::atan2(WHEEL_BASE, radius - (AXLE_WIDTH / 2)) * 3073 / PI);
-        motPos_[1] = 3073 - (std::atan2(WHEEL_BASE, radius + (AXLE_WIDTH / 2)) * 3073 / PI);
+        motPos_[0] = 3073 - (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[1] = 3073 - (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[2] = 3073 - (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[3] = 3073 - (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[4] = 3073 - (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[5] = 3073 - (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 3073 / PI);
     }
     else {
         motPos_[0] = 3073;
         motPos_[1] = 3073;
+        motPos_[2] = 3073;
+        motPos_[3] = 3073;
+        motPos_[4] = 3073;
+        motPos_[5] = 3073;
     }
 }
 void DynamixelController::timer_cb() {
-    writePosition(motPos_[0], motPos_[1]);
+    writePosition(motPos_[0], motPos_[1], motPos_[2], motPos_[3], motPos_[4], motPos_[5]);
 }
 
 int main(int argc, char * argv[]) {
