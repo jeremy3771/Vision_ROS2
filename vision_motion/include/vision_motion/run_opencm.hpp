@@ -22,7 +22,7 @@ private:
     void timer_cb();
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_;
     rclcpp::TimerBase::SharedPtr timer_;
-    int64_t motPos_[2] = {3073, 3073};
+    int64_t motPos_[6] = {3073, };
     double wheelOffset1_, wheelOffset2_, wheelOffset3_,axleWidth_;
 };
 
