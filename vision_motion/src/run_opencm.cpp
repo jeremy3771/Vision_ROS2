@@ -4,6 +4,15 @@ using namespace std::chrono_literals;
 using std::placeholders::_1;
 
 DynamixelController::DynamixelController() : Node("dynamixel_controller") {
+    declare_parameter("WO1", 0.36);
+    declare_parameter("WO2", 0.055);
+    declare_parameter("WO3", 0.185);
+    declare_parameter("AW", 0.40);
+    get_parameter("WO1", wheelOffset1_);
+    get_parameter("WO2", wheelOffset2_);
+    get_parameter("WO3", wheelOffset3_);
+    get_parameter("AW", axleWidth_);
+
     sub_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 10, std::bind(&DynamixelController::twist_cb ,this, _1));
     timer_ = this->create_wall_timer(10ms, std::bind(&DynamixelController::timer_cb, this));
 }
@@ -35,7 +44,7 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     }
 }
 void DynamixelController::timer_cb() {
-    writePosition(motPos_[0], motPos_[1], motPos_[2], motPos_[3], motPos_[4], motPos_[5]);
+    writePosition(motPos_);
 }
 
 int main(int argc, char * argv[]) {
