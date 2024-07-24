@@ -13,8 +13,6 @@
 #include "vision_motion/motor_driver.hpp"
 
 #define PI                              3.141592653589793
-#define AXLE_WIDTH                      0.2
-#define WHEEL_BASE                      0.3
 
 class DynamixelController : public rclcpp::Node, MotorCommand {
 public:
@@ -25,6 +23,7 @@ private:
     rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr sub_;
     rclcpp::TimerBase::SharedPtr timer_;
     int64_t motPos_[2] = {3073, 3073};
+    double wheelOffset1_, wheelOffset2_, wheelOffset3_,axleWidth_;
 };
 
 #endif
