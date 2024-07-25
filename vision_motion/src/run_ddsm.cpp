@@ -27,6 +27,7 @@ public:
         get_parameter("WD", wheelDiameter_);
 
         twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 1, std::bind(&DDSM_Twist::twist_cb, this, _1));
+        //이 부분 다른 Dynamixel callback timer는 10ms인데 여기서 50ms으로 받아오면 동기화 문제
         timer_ = this->create_wall_timer(50ms, std::bind(&DDSM_Twist::timer_cb, this));
     }
 private:
