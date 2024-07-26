@@ -58,23 +58,8 @@ private:
         wheel_omega[5] = v * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelOffset3_ / 2), 2)) / radius / wheelDiameter_ * 2;
 
 
-        if (omega < -0.01) {
-            motor_rpm_[0] = wheel_omega[1] * 30 / PI;
-            motor_rpm_[1] = -1 * wheel_omega[0] * 30 / PI;
-            motor_rpm_[2] = wheel_omega[3] * 30 / PI;
-            motor_rpm_[3] = -1 * wheel_omega[2] * 30 / PI;
-            motor_rpm_[4] = wheel_omega[5] * 30 / PI;
-            motor_rpm_[5] = -1 * wheel_omega[4] * 30 / PI;
-        }
-        else if(omega > 0.01) {
-            motor_rpm_[0] = wheel_omega[0] * 30 / PI;
-            motor_rpm_[1] = -1 * wheel_omega[1] * 30 / PI;
-            motor_rpm_[2] = wheel_omega[2] * 30 / PI;
-            motor_rpm_[3] = -1 * wheel_omega[3] * 30 / PI;
-            motor_rpm_[4] = wheel_omega[4] * 30 / PI;
-            motor_rpm_[5] = -1 * wheel_omega[5] * 30 / PI;
-        }
-        else if (std::abs(omega) > 0.01 && radius < 0.01) {
+
+	if (std::abs(omega) > 0.01 && radius < 0.01) {
 	    if (omega > 0.01) {
 	    	motor_rpm_[0] = 2 * omega * 30 / PI;
                 motor_rpm_[1] = -1 * 2 * omega * 30 / PI;
@@ -82,7 +67,32 @@ private:
                 motor_rpm_[3] = -1 * 2 * omega * 30 / PI;
                 motor_rpm_[4] = 2 * omega * 30 / PI;
                 motor_rpm_[5] = -1 * 2 * omega * 30 / PI;
-	    	} }  
+	    	}
+	    else if (omega < -0.01) {
+	    	motor_rpm_[0] = -1 * 2 * omega * 30 / PI;
+                motor_rpm_[1] =  2 * omega * 30 / PI;
+                motor_rpm_[2] = -1 * 2 * omega * 30 / PI;
+                motor_rpm_[3] =  2 * omega * 30 / PI;
+                motor_rpm_[4] = -1 * 2 * omega * 30 / PI;
+                motor_rpm_[5] =  2 * omega * 30 / PI;
+	    	}}      
+        else if (omega < -0.01 && radius > 0.01) {
+            motor_rpm_[0] = wheel_omega[1] * 30 / PI;
+            motor_rpm_[1] = -1 * wheel_omega[0] * 30 / PI;
+            motor_rpm_[2] = wheel_omega[3] * 30 / PI;
+            motor_rpm_[3] = -1 * wheel_omega[2] * 30 / PI;
+            motor_rpm_[4] = wheel_omega[5] * 30 / PI;
+            motor_rpm_[5] = -1 * wheel_omega[4] * 30 / PI;
+        }
+        else if(omega > 0.01 && radius > 0.01) {
+            motor_rpm_[0] = wheel_omega[0] * 30 / PI;
+            motor_rpm_[1] = -1 * wheel_omega[1] * 30 / PI;
+            motor_rpm_[2] = wheel_omega[2] * 30 / PI;
+            motor_rpm_[3] = -1 * wheel_omega[3] * 30 / PI;
+            motor_rpm_[4] = wheel_omega[4] * 30 / PI;
+            motor_rpm_[5] = -1 * wheel_omega[5] * 30 / PI;
+        }
+
         else {
             motor_rpm_[0] = (60 * v) / (wheelDiameter_ * PI);
             motor_rpm_[1] = -1 * (60 * v) / (wheelDiameter_ * PI);
