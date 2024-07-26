@@ -37,7 +37,7 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
         motPos_[5] = 3073 + (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 3073 / PI);
 
     }
-    else if (std::abs(msg.angular.z) > 0.01 && radius < 0.01) {
+    else if (std::abs(msg.angular.z) > 0.01 && msg.linear.x < 0.08) {
         motPos_[0] = 3073 - (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_);
         motPos_[1] = 3073 + (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_);
         motPos_[2] = 3073;
