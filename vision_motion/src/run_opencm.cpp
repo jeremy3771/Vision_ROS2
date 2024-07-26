@@ -38,12 +38,12 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
 
     }
     else if (std::abs(msg.angular.z) > 0.01 && radius < 0.01) {
-        motPos_[0] = 3073 - (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_);
-        motPos_[1] = 3073 + (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_);
+        motPos_[0] = 3073 - (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_));
+        motPos_[1] = 3073 + (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_));
         motPos_[2] = 3073;
         motPos_[3] = 3073;
-        motPos_[4] = 3073 + (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_);
-        motPos_[5] = 3073 - (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_);
+        motPos_[4] = 3073 + (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_));
+        motPos_[5] = 3073 - (std::atan2(wheelOffset1_ + wheelOffset2_ + wheelOffset3_, axleWidth_));
     }   
     else {
         motPos_[0] = 3073;
