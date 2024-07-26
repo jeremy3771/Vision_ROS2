@@ -48,7 +48,7 @@ private:
     void twist_cb(const geometry_msgs::msg::Twist msg) {
         double v = msg.linear.x;
         double omega = msg.angular.z;
-        auto radius = std::abs(v / omega);
+        double radius = (std::abs(omega) > 0.01) ? std::abs(v / omega) : 0;
 
         wheel_omega[0] = v * sqrt(pow((radius - axleWidth_ / 2), 2) + pow((wheelOffset1_ / 2), 2)) / radius / wheelDiameter_ * 2;
         wheel_omega[1] = v * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelOffset1_ / 2), 2)) / radius / wheelDiameter_ * 2;
@@ -76,12 +76,12 @@ private:
         }
         else if (std::abs(omega) > 0.01 && radius < 0.01) {
 	    if (omega > 0.01) {
-	    	motor_rpm_[0] = 0.01 * 30 / PI;
-                motor_rpm_[1] = -1 * 0.01 * 30 / PI;
-                motor_rpm_[2] = 0.01 * 30 / PI;
-                motor_rpm_[3] = -1 * 0.01 * 30 / PI;
-                motor_rpm_[4] = 0.01 * 30 / PI;
-                motor_rpm_[5] = -1 * 0.01 * 30 / PI;
+	    	motor_rpm_[0] = 2 * omega * 30 / PI;
+                motor_rpm_[1] = -1 * 2 * omega * 30 / PI;
+                motor_rpm_[2] = 2 * omega * 30 / PI;
+                motor_rpm_[3] = -1 * 2 * omega * 30 / PI;
+                motor_rpm_[4] = 2 * omega * 30 / PI;
+                motor_rpm_[5] = -1 * 2 * omega * 30 / PI;
 	    	} }  
         else {
             motor_rpm_[0] = (60 * v) / (wheelDiameter_ * PI);
