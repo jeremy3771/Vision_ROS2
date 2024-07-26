@@ -12,12 +12,14 @@ DynamixelController::DynamixelController() : Node("dynamixel_controller") {
     get_parameter("WO2", wheelOffset2_);
     get_parameter("WO3", wheelOffset3_);
     get_parameter("AW", axleWidth_);
+    get_parameter(, Length);
 
     sub_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 10, std::bind(&DynamixelController::twist_cb ,this, _1));
     timer_ = this->create_wall_timer(10ms, std::bind(&DynamixelController::timer_cb, this));
 }
 void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     double radius = std::abs(msg.linear.x / msg.angular.z);
+    
     if (msg.angular.z < -0.01 && radius > 0.01) {
         motPos_[0] = 3073 + (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
         motPos_[1] = 3073 + (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
@@ -34,6 +36,14 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
         motPos_[4] = 3073 - (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 3073 / PI);
         motPos_[5] = 3073 - (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 3073 / PI);
     }
+    else if (msg.angular.z < -0.01 && radius < 0.01) {
+        motPos_[0] = 3073 - (std::atan2(Length, axleWidth_);
+        motPos_[1] = 3073 + (std::atan2(Length, axleWidth_);
+        motPos_[2] = 3073;
+        motPos_[3] = 3073;
+        motPos_[4] = 3073 + (std::atan2(Length, axleWidth_);
+        motPos_[5] = 3073 - (std::atan2(Length, axleWidth_);
+    }   
     else {
         motPos_[0] = 3073;
         motPos_[1] = 3073;
