@@ -27,7 +27,6 @@ public:
         get_parameter("WD", wheelDiameter_);
 
         twist_sub_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 1, std::bind(&DDSM_Twist::twist_cb, this, _1));
-        //이 부분 다른 Dynamixel callback timer는 10ms인데 여기서 50ms으로 받아오면 동기화 문제
         timer_ = this->create_wall_timer(50ms, std::bind(&DDSM_Twist::timer_cb, this));
     }
 private:
@@ -50,7 +49,6 @@ private:
         double v = msg.linear.x;
         double omega = msg.angular.z;
         auto radius = std::abs(v / omega);
-        double cf = PI * wheelDiameter_;
 
         wheel_omega[0] = v * sqrt(pow((radius - axleWidth_ / 2), 2) + pow((wheelOffset1_ / 2), 2)) / radius / wheelDiameter_ * 2;
         wheel_omega[1] = v * sqrt(pow((radius + axleWidth_ / 2), 2) + pow((wheelOffset1_ / 2), 2)) / radius / wheelDiameter_ * 2;
@@ -76,6 +74,15 @@ private:
             motor_rpm_[4] = wheel_omega[4] * 30 / PI;
             motor_rpm_[5] = -1 * wheel_omega[5] * 30 / PI;
         }
+        else if (std::abs(omega) > 0.01 && radius < 0.01) {
+	    if (omega > 0.01) {
+	    	motor_rpm_[0] = 0.01 * 30 / PI;
+                motor_rpm_[1] = -1 * 0.01 * 30 / PI;
+                motor_rpm_[2] = 0.01 * 30 / PI;
+                motor_rpm_[3] = -1 * 0.01 * 30 / PI;
+                motor_rpm_[4] = 0.01 * 30 / PI;
+                motor_rpm_[5] = -1 * 0.01 * 30 / PI;
+	    	} }  
         else {
             motor_rpm_[0] = (60 * v) / (wheelDiameter_ * PI);
             motor_rpm_[1] = -1 * (60 * v) / (wheelDiameter_ * PI);
