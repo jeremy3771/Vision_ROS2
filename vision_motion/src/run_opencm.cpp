@@ -8,9 +8,9 @@ using std::placeholders::_1;
 #include <iomanip>
 
 DynamixelController::DynamixelController() : Node("dynamixel_controller") {
-    declare_parameter("WO1", 0.36);
-    declare_parameter("WO2", 0.055);
-    declare_parameter("WO3", 0.185);
+    declare_parameter("WO1", 0.54);
+    declare_parameter("WO2", 0.04);
+    declare_parameter("WO3", 0.29);
     declare_parameter("AW", 0.40);
     get_parameter("WO1", wheelOffset1_);
     get_parameter("WO2", wheelOffset2_);
