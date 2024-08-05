@@ -18,7 +18,7 @@ public:
     pointcloud_to_laserscan() : Node("pointcloud_to_laserscan") {
         // --ros-args -p min_height:=0.5 ...
         declare_parameter("min_height", std::numeric_limits<double>::min());
-        declare_parameter("max_height", std::numeric_limits<double>::max());
+        declare_parameter("max_height", 0.5);
         declare_parameter("angle_min", -M_PI);
         declare_parameter("angle_max", M_PI);
         declare_parameter("angle_increment", M_PI / 180.0);
