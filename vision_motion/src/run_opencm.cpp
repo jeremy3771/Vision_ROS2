@@ -25,7 +25,6 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     double radius = std::abs(msg.linear.x / msg.angular.z);
     
     if (msg.angular.z < -0.01 && radius > 0.01) {
-        std::cout << "영차영차 우회전 " << std::endl;
         motPos_[0] = 3073 + (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
         motPos_[1] = 3073 + (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
         motPos_[2] = 3073 + (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 3073 / PI);
@@ -34,7 +33,6 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
         motPos_[5] = 3073 - (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 3073 / PI);
     }
     else if (msg.angular.z > 0.01 && radius > 0.01) {
-        std::cout << "영차영차 좌회전 " << std::endl;
         motPos_[0] = 3073 - (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
         motPos_[1] = 3073 - (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
         motPos_[2] = 3073 - (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 3073 / PI);
@@ -54,7 +52,6 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
         motPos_[5] = 3073 + (std::atan2(wheelOffset1_ + wheelOffset3_, axleWidth_)* 3073 / PI);
     }   
     else {
-        std::cout << "영차영차  " << std::endl;
         motPos_[0] = 3073;
         motPos_[1] = 3073;
         motPos_[2] = 3073;
