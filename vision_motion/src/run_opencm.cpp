@@ -8,7 +8,7 @@ using std::placeholders::_1;
 #include <iomanip>
 
 DynamixelController::DynamixelController() : Node("dynamixel_controller") {
-    declare_parameter("WO1", 0.54);
+    declare_parameter("WO1", 0.53);
     declare_parameter("WO2", 0.035);
     declare_parameter("WO3", 0.285);
     declare_parameter("AW", 0.40);
