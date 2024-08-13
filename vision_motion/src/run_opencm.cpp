@@ -25,32 +25,29 @@ void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     double radius = std::abs(msg.linear.x / msg.angular.z);
     
     if (msg.angular.z < -0.01 && radius > 0.01) {
-        motPos_[0] = 3073 + (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[1] = 3073 + (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[2] = 3073 + (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[3] = 3073 + (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[4] = 3073 - (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[5] = 3073 - (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[0] = 3073 + (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[1] = 3073 + (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[2] = 3073 + (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[3] = 3073 + (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[4] = 3073 - (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[5] = 3073 - (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 2048 / PI);
     }
     else if (msg.angular.z > 0.01 && radius > 0.01) {
-        motPos_[0] = 3073 - (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[1] = 3073 - (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[2] = 3073 - (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[3] = 3073 - (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[4] = 3073 + (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 3073 / PI);
-        motPos_[5] = 3073 + (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 3073 / PI);
+        motPos_[0] = 3073 - (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[1] = 3073 - (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[2] = 3073 - (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[3] = 3073 - (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[4] = 3073 + (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[5] = 3073 + (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 2048 / PI);
     }
-    else if (std::abs(msg.angular.z) > 0.03 && radius < 0.01) {
-        std::cout << "왜?  " << std::endl;
-        double calculation = (std::atan2(wheelOffset1_ + wheelOffset3_, axleWidth_) * 3073 / M_PI);
-        std::cout << "Calculation result: " << calculation << std::endl;
-        motPos_[0] = 3073 + (std::atan2(wheelOffset1_ + wheelOffset3_, axleWidth_)* 3073 / PI);
-        motPos_[1] = 3073 - (std::atan2(wheelOffset1_ + wheelOffset3_, axleWidth_)* 3073 / PI);
-        motPos_[2] = 3073;
-        motPos_[3] = 3073;
-        motPos_[4] = 3073 - (std::atan2(wheelOffset1_ + wheelOffset3_, axleWidth_)* 3073 / PI);
-        motPos_[5] = 3073 + (std::atan2(wheelOffset1_ + wheelOffset3_, axleWidth_)* 3073 / PI);
-    }   
+    else if (std::abs(msg.angular.z) > 0.01 && msg.linear.x < 0.01) { // rot. in place
+        motPos_[0] = 3073 + (std::atan2(wheelOffset1_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[1] = 3073 - (std::atan2(wheelOffset1_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[2] = 3073 + (std::atan2(wheelOffset2_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[3] = 3073 - (std::atan2(wheelOffset2_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[4] = 3073 - (std::atan2(wheelOffset3_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[5] = 3073 + (std::atan2(wheelOffset3_, (axleWidth_ / 2)) * 2048 / PI);
+    }
     else {
         motPos_[0] = 3073;
         motPos_[1] = 3073;
