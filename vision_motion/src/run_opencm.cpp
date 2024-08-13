@@ -1,11 +1,10 @@
 #include "vision_motion/run_opencm.hpp"
 
-using namespace std::chrono_literals;
-using std::placeholders::_1;
-
 #include <iostream>
 #include <cmath>
-#include <iomanip>
+
+using namespace std::chrono_literals;
+using std::placeholders::_1;
 
 DynamixelController::DynamixelController() : Node("dynamixel_controller") {
     declare_parameter("WO1", 0.53);
