@@ -17,7 +17,7 @@ DynamixelController::DynamixelController() : Node("dynamixel_controller") {
     get_parameter("AW", axleWidth_);
     
     sub_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 10, std::bind(&DynamixelController::twist_cb ,this, _1));
-    timer_ = this->create_wall_timer(10ms, std::bind(&DynamixelController::timer_cb, this));
+    timer_ = this->create_wall_timer(50ms, std::bind(&DynamixelController::timer_cb, this));
     std::fill(motPos_, motPos_ + 6, 3073);
 }
 void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
