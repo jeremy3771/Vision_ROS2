@@ -31,14 +31,14 @@ public:
     }
     void timer_cb() {
     	try {
-        	port1.SET_VELOCITY(1, motor_rpm_[0]);
-        	port2.SET_VELOCITY(1, motor_rpm_[1]);
-        	if (timer == 0) {
-            	port3.SET_VELOCITY(1, motor_rpm_[2]);
-            	port4.SET_VELOCITY(1, motor_rpm_[3]);
-            	timer = 1;
-        	}
-        	else {
+            port1.SET_VELOCITY(1, motor_rpm_[0]);
+            port2.SET_VELOCITY(1, motor_rpm_[1]);
+            if (timer == 0) {
+                port3.SET_VELOCITY(1, motor_rpm_[2]);
+                port4.SET_VELOCITY(1, motor_rpm_[3]);
+                timer = 1;
+            }
+            else {
             	port3.SET_VELOCITY(2, motor_rpm_[4]);
             	port4.SET_VELOCITY(2, motor_rpm_[5]);
             	timer = 0;
