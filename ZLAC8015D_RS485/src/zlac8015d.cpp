@@ -4,7 +4,6 @@ ZLAC::ZLAC(std::string portname, int baudrate, uint8_t ID) : port(io, portname) 
     this->ID = ID;
 
     printf("===serial begin===\n");
-    port.open(portname);
     port.set_option(serial_port_base::baud_rate(baudrate));
     port.set_option(serial_port_base::character_size(8));
     port.set_option(serial_port_base::parity(serial_port_base::parity::none));
