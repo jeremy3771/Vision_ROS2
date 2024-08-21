@@ -15,10 +15,10 @@ using std::placeholders::_1;
 class DDSM_Twist : public rclcpp::Node {
 public:
     DDSM_Twist() : Node("DDSM115"), port1(0), port2(2), port3(4), port4(6){
-        declare_parameter("WO1", 0.53);
-        declare_parameter("WO2", 0.035);
-        declare_parameter("WO3", 0.285);
-        declare_parameter("AW", 0.40);
+        declare_parameter("WO1", 0.566);
+        declare_parameter("WO2", 0.165);
+        declare_parameter("WO3", 0.274);
+        declare_parameter("AW", 0.39);
         declare_parameter("WD", 0.1);
         get_parameter("WO1", wheelOffset1_);
         get_parameter("WO2", wheelOffset2_);
