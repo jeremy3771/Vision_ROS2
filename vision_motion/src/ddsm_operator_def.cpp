@@ -68,8 +68,12 @@ void MOTOR_COMMAND::ID_QUERY() {
     vector<uint8_t> data = {0xC8, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0xDE};
     send_data(data);
     vector<uint8_t> read_buf(1);
-    port.read_some(buffer(read_buf));
-    std::cout << "ID: 0x" << std::hex << static_cast<int>(read_buf[0]) << std::endl;
+
+    timer.expires_from_now(std::chrono::seconds(2));
+    timer.async_wait(boost::bind(&MOTOR_COMMAND::handle_timeout, this, boost::asio::placeholders::error));
+    port.async_read_some(buffer(read_buf),
+        boost::bind(&MOTOR_COMMAND::handle_read, this, boost::asio::placeholders::error, read_buf[0]));
+    io.run();
 }
 
 void MOTOR_COMMAND::SWITCH_VELOCITY_MODE(uint8_t ID) {
@@ -104,4 +108,20 @@ void MOTOR_COMMAND::BRAKE(uint8_t ID) {
     uint8_t crc = calculate_crc(data_temp);
     vector<uint8_t> data = {ID, 0x64, 0x00, 0x00, 0x00, 0x00, 0x00, 0xFF, 0x00, crc};
     send_data(data);
+}
+
+void MOTOR_COMMAND::handle_read(const boost::system::error_code& error, uint8_t id) {
+    if (!error) {
+        std::cout << "ID: 0x" << std::hex << static_cast<int>(id) << std::endl;
+        timer.cancel();
+    } else {
+        std::cout << "Error reading ID: " << error.message() << std::endl;
+    }
+}
+
+void MOTOR_COMMAND::handle_timeout(const boost::system::error_code& error) {
+    if (!error) {
+        std::cout << "Timeout! No response from device." << std::endl;
+        port.cancel();
+    }
 }
