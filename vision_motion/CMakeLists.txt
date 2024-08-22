@@ -32,9 +32,9 @@ install(TARGETS
   run_cm
   DESTINATION lib/${PROJECT_NAME})
 
-# Install launch files.
+# Install launch, param files.
 install(DIRECTORY
-  launch
+  launch param
   DESTINATION share/${PROJECT_NAME}/
 )
 
