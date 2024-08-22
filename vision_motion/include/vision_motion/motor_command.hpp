@@ -2,9 +2,11 @@
 #define DDSM_CPP_PY_MOTOR_COMMAND_HPP
 
 #include <boost/asio.hpp>
+#include <boost/bind/bind.hpp>
 #include <iostream>
 #include <vector>
 #include <array>
+#include <chrono>
 
 using namespace boost::asio;
 using std::array;
@@ -28,6 +30,10 @@ private:
     pair<uint8_t, uint8_t> decimal_to_hex_bytes(int decimal);
     uint8_t calculate_crc(const vector<uint8_t>& data);
     void send_data(const vector<uint8_t>& data);
+
+	void handle_read(const boost::system::error_code& error, uint8_t id);
+	void handle_timeout(const boost::system::error_code& error);
+    steady_timer timer;
 
     static const array<uint8_t, 256> CRC8_MAXIM_table;
 };
