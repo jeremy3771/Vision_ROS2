@@ -16,44 +16,45 @@ DynamixelController::DynamixelController() : Node("dynamixel_controller") {
     get_parameter("WO3", wheelOffset3_);
     get_parameter("AW", axleWidth_);
     
+    std::fill(motPos_, motPos_ + 6, 2048);
+    
     sub_ = this->create_subscription<geometry_msgs::msg::Twist>("cmd_vel", 10, std::bind(&DynamixelController::twist_cb ,this, _1));
     timer_ = this->create_wall_timer(50ms, std::bind(&DynamixelController::timer_cb, this));
-    std::fill(motPos_, motPos_ + 6, 3073);
 }
 void DynamixelController::twist_cb(const geometry_msgs::msg::Twist msg) {
     double radius = std::abs(msg.linear.x / msg.angular.z);
     
-    if (msg.angular.z < -0.01 && radius > 0.01) {
-        motPos_[0] = 3073 + (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[1] = 3073 + (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[2] = 3073 + (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[3] = 3073 + (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[4] = 3073 - (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[5] = 3073 - (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 2048 / PI);
+    if (msg.angular.z < -0.001 && radius > 0.01) {
+        motPos_[0] = 2048 + (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[1] = 2048 + (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[2] = 2048 + (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[3] = 2048 + (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[4] = 2048 - (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[5] = 2048 - (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 2048 / PI);
     }
-    else if (msg.angular.z > 0.01 && radius > 0.01) {
-        motPos_[0] = 3073 - (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[1] = 3073 - (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[2] = 3073 - (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[3] = 3073 - (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[4] = 3073 + (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[5] = 3073 + (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 2048 / PI);
+    else if (msg.angular.z > 0.001 && radius > 0.01) {
+        motPos_[0] = 2048 - (std::atan2(wheelOffset1_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[1] = 2048 - (std::atan2(wheelOffset1_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[2] = 2048 - (std::atan2(wheelOffset2_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[3] = 2048 - (std::atan2(wheelOffset2_, radius + (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[4] = 2048 + (std::atan2(wheelOffset3_, radius - (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[5] = 2048 + (std::atan2(wheelOffset3_, radius + (axleWidth_ / 2)) * 2048 / PI);
     }
-    else if (std::abs(msg.angular.z) > 0.01 && msg.linear.x < 0.01) { // rot. in place
-        motPos_[0] = 3073 + (std::atan2(wheelOffset1_, (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[1] = 3073 - (std::atan2(wheelOffset1_, (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[2] = 3073 + (std::atan2(wheelOffset2_, (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[3] = 3073 - (std::atan2(wheelOffset2_, (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[4] = 3073 - (std::atan2(wheelOffset3_, (axleWidth_ / 2)) * 2048 / PI);
-        motPos_[5] = 3073 + (std::atan2(wheelOffset3_, (axleWidth_ / 2)) * 2048 / PI);
+    else if (std::abs(msg.angular.z) > 0.001 && msg.linear.x < 0.001) { // rot. in place
+        motPos_[0] = 2048 + (std::atan2(wheelOffset1_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[1] = 2048 - (std::atan2(wheelOffset1_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[2] = 2048 + (std::atan2(wheelOffset2_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[3] = 2048 - (std::atan2(wheelOffset2_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[4] = 2048 - (std::atan2(wheelOffset3_, (axleWidth_ / 2)) * 2048 / PI);
+        motPos_[5] = 2048 + (std::atan2(wheelOffset3_, (axleWidth_ / 2)) * 2048 / PI);
     }
     else {
-        motPos_[0] = 3073;
-        motPos_[1] = 3073;
-        motPos_[2] = 3073;
-        motPos_[3] = 3073;
-        motPos_[4] = 3073;
-        motPos_[5] = 3073;
+        motPos_[0] = 2048;
+        motPos_[1] = 2048;
+        motPos_[2] = 2048;
+        motPos_[3] = 2048;
+        motPos_[4] = 2048;
+        motPos_[5] = 2048;
     }
 }
 void DynamixelController::timer_cb() {
