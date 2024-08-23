@@ -90,27 +90,27 @@ def main():
         print(msg)
         while(1):
             key = get_key(settings)
-            if key == 'w' or key == 'W' or key == 'ㅈ':
+            if key == 'w' or key == 'W':
                 target_linear_velocity =\
                     check_linear_limit_velocity(target_linear_velocity + LIN_VEL_STEP_SIZE)
                 status = status + 1
                 print_vels(target_linear_velocity, target_angular_velocity)
-            elif key == 'x' or key == 'X' or key == 'ㅌ':
+            elif key == 'x' or key == 'X':
                 target_linear_velocity =\
                     check_linear_limit_velocity(target_linear_velocity - LIN_VEL_STEP_SIZE)
                 status = status + 1
                 print_vels(target_linear_velocity, target_angular_velocity)
-            elif key == 'a' or key == 'A' or key == 'ㅁ':
+            elif key == 'a' or key == 'A':
                 target_angular_velocity =\
                     check_angular_limit_velocity(target_angular_velocity + ANG_VEL_STEP_SIZE)
                 status = status + 1
                 print_vels(target_linear_velocity, target_angular_velocity)
-            elif key == 'd' or key == 'D' or key == 'ㅇ':
+            elif key == 'd' or key == 'D':
                 target_angular_velocity =\
                     check_angular_limit_velocity(target_angular_velocity - ANG_VEL_STEP_SIZE)
                 status = status + 1
                 print_vels(target_linear_velocity, target_angular_velocity)
-            elif key == ' ' or key == 's' or key == 'S' or key == 'ㄴ':
+            elif key == ' ' or key == 's' or key == 'S':
                 target_linear_velocity = 0.0
                 control_linear_velocity = 0.0
                 target_angular_velocity = 0.0
