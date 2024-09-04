@@ -77,11 +77,11 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr environment::detectObject(
     vertices.push_back(plane2.second);
     vertices.push_back(Eigen::Vector3f(plane2.second(0), plane2.first(1), plane2.first(2)));
 
-    planes.push_back(getPlane(vertices[0], vertices[1], vertices[2]));
-    planes.push_back(getPlane(vertices[4], vertices[5], vertices[6]));
+    planes.push_back(getPlane(vertices[0], vertices[3], vertices[1]));
+    planes.push_back(getPlane(vertices[4], vertices[5], vertices[7]));
     planes.push_back(getPlane(vertices[0], vertices[1], vertices[4]));
     planes.push_back(getPlane(vertices[2], vertices[3], vertices[6]));
-    planes.push_back(getPlane(vertices[0], vertices[3], vertices[4]));
+    planes.push_back(getPlane(vertices[0], vertices[4], vertices[3]));
     planes.push_back(getPlane(vertices[1], vertices[2], vertices[5]));
 
     for (auto elem : cloud->points) {
