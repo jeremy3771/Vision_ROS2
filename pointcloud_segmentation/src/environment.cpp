@@ -71,11 +71,11 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr environment::detectObject(
     vertices.push_back(plane1.first);
     vertices.push_back(Eigen::Vector3f(plane1.first(0), plane1.first(1), plane1.second(2)));
     vertices.push_back(plane1.second);
-    vertices.push_back(Eigen::Vector3f(plane1.second(0), plane1.first(1), plane1.first(2)));
+    vertices.push_back(Eigen::Vector3f(plane1.first(0), plane1.second(1), plane1.first(2)));
     vertices.push_back(plane2.first);
     vertices.push_back(Eigen::Vector3f(plane2.first(0), plane2.first(1), plane2.second(2)));
     vertices.push_back(plane2.second);
-    vertices.push_back(Eigen::Vector3f(plane2.second(0), plane2.first(1), plane2.first(2)));
+    vertices.push_back(Eigen::Vector3f(plane2.first(0), plane2.second(1), plane2.first(2)));
 
     planes.push_back(getPlane(vertices[0], vertices[3], vertices[1]));
     planes.push_back(getPlane(vertices[4], vertices[5], vertices[7]));
@@ -123,8 +123,8 @@ void environment::pointcloud_cb(const sensor_msgs::msg::PointCloud2::SharedPtr c
 
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1;
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2;
-    plane1 = std::make_pair(Eigen::Vector3f(-1, 0, 1), Eigen::Vector3f(1, 0, -1));
-    plane2 = std::make_pair(Eigen::Vector3f(-2, 1, 1), Eigen::Vector3f(2, 1, -1));
+    plane1 = std::make_pair(Eigen::Vector3f(1, 1, 1), Eigen::Vector3f(1, -1, -1));
+    plane2 = std::make_pair(Eigen::Vector3f(3, 1, 1), Eigen::Vector3f(3, -1, -1));
     cloud_filtered = detectObject(
         cloud_filtered,
         false,
