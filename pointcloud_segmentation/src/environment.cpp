@@ -57,7 +57,6 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr environment::FilterCloud(
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr environment::detectObject(
     pcl::PointCloud<pcl::PointXYZ>::Ptr         cloud,
-    bool                                        view,
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1,
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2)
 {
@@ -122,11 +121,10 @@ void environment::pointcloud_cb(const sensor_msgs::msg::PointCloud2::SharedPtr c
 
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1;
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2;
-    plane1 = std::make_pair(Eigen::Vector3f(1, 1, 1), Eigen::Vector3f(1, -1, -1));
+    plane1 = std::make_pair(Eigen::Vector3f(1, 0.5, 1), Eigen::Vector3f(1, -0.5, -1));
     plane2 = std::make_pair(Eigen::Vector3f(3, 1, 1), Eigen::Vector3f(3, -1, -1));
     cloud_filtered = detectObject(
         cloud_filtered,
-        false,
         plane1,
         plane2
     );
