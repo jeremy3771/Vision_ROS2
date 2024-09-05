@@ -51,7 +51,6 @@ private:
     /// @return Detected Points
     pcl::PointCloud<pcl::PointXYZ>::Ptr detectObject(
         pcl::PointCloud<pcl::PointXYZ>::Ptr         cloud,
-        bool                                        view,
         std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1,
         std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2);
 
