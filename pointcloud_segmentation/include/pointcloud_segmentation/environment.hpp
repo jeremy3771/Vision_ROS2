@@ -5,7 +5,6 @@
 #include <memory>
 #include <string>
 #include <utility>
-#include <stdio.h>
 #include <iterator>
 #include <algorithm>
 
@@ -38,8 +37,8 @@ private:
     /// @param[in] filterRes XYZ Leaf Size
     /// @param[in] minPoint ROI Min Point
     /// @param[in] maxPoint ROI Max Point
-    pcl::PointCloud<pcl::PointXYZI>::Ptr FilterCloud(
-        pcl::PointCloud<pcl::PointXYZI>::Ptr    cloud,
+    pcl::PointCloud<pcl::PointXYZ>::Ptr FilterCloud(
+        pcl::PointCloud<pcl::PointXYZ>::Ptr     cloud,
         float                                   filterRes,
         Eigen::Vector4f                         minPoint,
         Eigen::Vector4f                         maxPoint);
@@ -50,25 +49,25 @@ private:
     /// @param[in] plane1 First Rectangular Plane in 3D Space; Boundaries of the Frustum
     /// @param[in] plane2 Second Rectangular Plane in 3D Space
     /// @return Detected Points
-    pcl::PointCloud<pcl::PointXYZI>::Ptr detectObject(
-        pcl::PointCloud<pcl::PointXYZI>::Ptr             cloud,
+    pcl::PointCloud<pcl::PointXYZ>::Ptr detectObject(
+        pcl::PointCloud<pcl::PointXYZ>::Ptr         cloud,
         bool                                        view,
         std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1,
         std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2);
 
     /// @brief Get Plane Function (Three Points)
+    /// @return Plane Function(struct)
     Plane getPlane(const Eigen::Vector3f& p1, const Eigen::Vector3f& p2, const Eigen::Vector3f& p3);
 
     /// @brief Check Point is Inside the prisms
     bool isPointInside(const std::vector<Plane>& planes, Eigen::Vector3f point);
 
-    double range_min_;
-    rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_subscriber_;
-    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr publisher_;
-
     /// @brief Detect object using PointCloud2
     /// @param[in] cloud_msg ROS2 PointCloud2 data
     void pointcloud_cb(const sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg);
+
+    rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr pointcloud_subscriber_;
+    rclcpp::Publisher<sensor_msgs::msg::PointCloud2>::SharedPtr publisher_;
 };
 
 #endif
