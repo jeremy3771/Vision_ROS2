@@ -1,35 +1,31 @@
 #include "pointcloud_segmentation/environment.hpp"
-#include <iostream>
 
 using std::placeholders::_1;
 
 environment::environment() : Node("lidar_environment") {
     RCLCPP_INFO(get_logger(), "Init Lidar Environment Node");
-    declare_parameter("range_min", 0.0);
-    get_parameter("range_min", range_min_);
 
     auto qos_profile = rclcpp::QoS(rclcpp::KeepLast(5));
 
     pointcloud_subscriber_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
         "livox/lidar", qos_profile, std::bind(&environment::pointcloud_cb, this, _1));
-    publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("voxel_grid_filter_test", 2);
-    pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("test", 2);
+    publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("livox/environment", 2);
 }
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr environment::FilterCloud(
-    pcl::PointCloud<pcl::PointXYZI>::Ptr  cloud,
-    float                                 filterRes,
-    Eigen::Vector4f                       minPoint,
-    Eigen::Vector4f                       maxPoint)
+pcl::PointCloud<pcl::PointXYZ>::Ptr environment::FilterCloud(
+    pcl::PointCloud<pcl::PointXYZ>::Ptr     cloud,
+    float                                   filterRes,
+    Eigen::Vector4f                         minPoint,
+    Eigen::Vector4f                         maxPoint)
 {
-    pcl::PointCloud<pcl::PointXYZI>::Ptr cloudFiltered (new pcl::PointCloud<pcl::PointXYZI>);
-    pcl::VoxelGrid<pcl::PointXYZI> vg;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloudFiltered (new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::VoxelGrid<pcl::PointXYZ> vg;
     vg.setInputCloud(cloud);
     vg.setLeafSize(filterRes, filterRes, filterRes);
     vg.filter(*cloudFiltered);
 
     // Filter Region of interest
-    pcl::CropBox<pcl::PointXYZI> region(true);
+    pcl::CropBox<pcl::PointXYZ> region(true);
     region.setMin(minPoint);
     region.setMax(maxPoint);
     region.setInputCloud(cloudFiltered);
@@ -37,7 +33,7 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr environment::FilterCloud(
 
     // Filter Points on the Robot Roof Top
     std::vector<int> indices;
-    pcl::CropBox<pcl::PointXYZI> roof(true);
+    pcl::CropBox<pcl::PointXYZ> roof(true);
     roof.setMin(Eigen::Vector4f(-1.5, -1.7, -1, 1));
     roof.setMax(Eigen::Vector4f(2.6, 1.7, 0.0, 1));
     roof.setInputCloud(cloudFiltered);
@@ -49,7 +45,7 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr environment::FilterCloud(
     }
 
     // Remove Roof Points
-    pcl::ExtractIndices<pcl::PointXYZI> extract;
+    pcl::ExtractIndices<pcl::PointXYZ> extract;
     extract.setInputCloud(cloudFiltered);
     extract.setIndices(inliers);
     extract.setNegative(true);
@@ -59,13 +55,13 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr environment::FilterCloud(
 }
 
 
-pcl::PointCloud<pcl::PointXYZI>::Ptr environment::detectObject(
-    pcl::PointCloud<pcl::PointXYZI>::Ptr        cloud,
+pcl::PointCloud<pcl::PointXYZ>::Ptr environment::detectObject(
+    pcl::PointCloud<pcl::PointXYZ>::Ptr         cloud,
     bool                                        view,
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1,
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2)
 {
-    pcl::PointCloud<pcl::PointXYZI>::Ptr detectPoints (new pcl::PointCloud<pcl::PointXYZI>);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr detectPoints (new pcl::PointCloud<pcl::PointXYZ>);
     std::vector<Plane> planes;
     std::vector<Eigen::Vector3f> vertices;
 
@@ -104,17 +100,15 @@ Plane environment::getPlane(const Eigen::Vector3f& p0, const Eigen::Vector3f& p1
 bool environment::isPointInside(const std::vector<Plane>& planes, Eigen::Vector3f point) {
     for (const auto& plane : planes) {
         if (plane.normal.dot(point) + plane.d < 0){
-            // std::cout << "del\n";
             return false;
         }
-        // std::cout << "\n" << point[0] << "\n" << point[1] << "\n" << point[2] << "\n";
     }
     return true;
 }
 
 void environment::pointcloud_cb(const sensor_msgs::msg::PointCloud2::SharedPtr cloud_msg) {
-    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_dst(new pcl::PointCloud<pcl::PointXYZI>);
-    pcl::PointCloud<pcl::PointXYZI>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZI>);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_dst(new pcl::PointCloud<pcl::PointXYZ>);
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
     sensor_msgs::msg::PointCloud2 cloud_out;
 
     pcl::fromROSMsg(*cloud_msg, *cloud_dst);
@@ -125,7 +119,6 @@ void environment::pointcloud_cb(const sensor_msgs::msg::PointCloud2::SharedPtr c
         Eigen::Vector4f (-20, -6, -3, 1),
         Eigen::Vector4f (30, 7, 2, 1));
     pcl::toROSMsg(*cloud_filtered,cloud_out);
-    pub_->publish(cloud_out);
 
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1;
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2;
@@ -138,7 +131,6 @@ void environment::pointcloud_cb(const sensor_msgs::msg::PointCloud2::SharedPtr c
         plane2
     );
     pcl::toROSMsg(*cloud_filtered,cloud_out);
-
     cloud_out.header.frame_id = cloud_msg->header.frame_id;
     cloud_out.header.stamp = cloud_msg->header.stamp;
 
