@@ -1,4 +1,5 @@
 #include "pointcloud_segmentation/environment.hpp"
+#include <iostream>
 
 using std::placeholders::_1;
 
@@ -12,7 +13,7 @@ environment::environment() : Node("lidar_environment") {
     pointcloud_subscriber_ = this->create_subscription<sensor_msgs::msg::PointCloud2>(
         "livox/lidar", qos_profile, std::bind(&environment::pointcloud_cb, this, _1));
     publisher_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("voxel_grid_filter_test", 2);
-
+    pub_ = this->create_publisher<sensor_msgs::msg::PointCloud2>("test", 2);
 }
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr environment::FilterCloud(
@@ -59,7 +60,7 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr environment::FilterCloud(
 
 
 pcl::PointCloud<pcl::PointXYZI>::Ptr environment::detectObject(
-    pcl::PointCloud<pcl::PointXYZI>::Ptr       cloud,
+    pcl::PointCloud<pcl::PointXYZI>::Ptr        cloud,
     bool                                        view,
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1,
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2)
@@ -85,24 +86,28 @@ pcl::PointCloud<pcl::PointXYZI>::Ptr environment::detectObject(
     planes.push_back(getPlane(vertices[1], vertices[2], vertices[5]));
 
     for (auto elem : cloud->points) {
-        if (isPointInside(planes, Eigen::Vector3f(elem.data_c[0],elem.data_c[1],elem.data_c[2]))) {
+        Eigen::Vector3f point(elem.x,elem.y,elem.z);
+        if (isPointInside(planes, point)) {
             detectPoints->points.push_back(elem);
         }
     }
     return detectPoints;
 }
 
-Plane environment::getPlane(const Eigen::Vector3f& p1, const Eigen::Vector3f& p2, const Eigen::Vector3f& p3) {
+Plane environment::getPlane(const Eigen::Vector3f& p0, const Eigen::Vector3f& p1, const Eigen::Vector3f& p2) {
     Plane plane;
-    plane.normal = (p2 - p1).cross(p3 - p1).normalized();
-    plane.d = -plane.normal.dot(p1);
+    plane.normal = (p1 - p0).cross(p2 - p0).normalized();
+    plane.d = -plane.normal.dot(p0);
     return plane;
 }
 
 bool environment::isPointInside(const std::vector<Plane>& planes, Eigen::Vector3f point) {
     for (const auto& plane : planes) {
-        if (plane.normal.dot(point) + plane.d < 0)
+        if (plane.normal.dot(point) + plane.d < 0){
+            // std::cout << "del\n";
             return false;
+        }
+        // std::cout << "\n" << point[0] << "\n" << point[1] << "\n" << point[2] << "\n";
     }
     return true;
 }
@@ -118,8 +123,9 @@ void environment::pointcloud_cb(const sensor_msgs::msg::PointCloud2::SharedPtr c
         cloud_dst,
         0.3 ,
         Eigen::Vector4f (-20, -6, -3, 1),
-        Eigen::Vector4f ( 30, 7, 2, 1));
-
+        Eigen::Vector4f (30, 7, 2, 1));
+    pcl::toROSMsg(*cloud_filtered,cloud_out);
+    pub_->publish(cloud_out);
 
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane1;
     std::pair<Eigen::Vector3f, Eigen::Vector3f> plane2;
