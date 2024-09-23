@@ -2,6 +2,8 @@ import os
 import select
 import sys
 import rclpy
+import time
+import Jetson.GPIO as GPIO
 
 from geometry_msgs.msg import Twist
 from rclpy.qos import QoSProfile
@@ -11,6 +13,10 @@ if os.name == 'nt':
 else:
     import termios
     import tty
+
+gun_pin = 8
+laser_pin = 35
+laser_on = False
 
 MAX_LIN_VEL = 1.20
 MAX_ANG_VEL = 1.00
@@ -76,6 +82,10 @@ def main():
     if os.name != 'nt':
         settings = termios.tcgetattr(sys.stdin)
 
+    GPIO.setmode(GPIO.BOARD)
+    GPIO.setup(laser_pin, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(gun_pin, GPIO.OUT, initial=GPIO.LOW)
+
     rclpy.init()
 
     qos = QoSProfile(depth=10)
@@ -116,6 +126,11 @@ def main():
                 target_angular_velocity = 0.0
                 control_angular_velocity = 0.0
                 print_vels(target_linear_velocity, target_angular_velocity)
+            elif key == 'l' or key == 'L':
+                if (laser_on):
+                    GPIO.output(laser_pin, GPIO.LOW)
+                else:
+                    GPIO.output(laser_pin, GPIO.HIGH)
             else:
                 if (key == '\x03'):
                     break
