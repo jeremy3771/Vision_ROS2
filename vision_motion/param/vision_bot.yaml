@@ -14,3 +14,18 @@
           reliability: reliable
     use_sim_time: false
 
+/dynamixel_controller:
+  ros__parameters:
+    AW: 0.39
+    WD: 0.1
+    WO1: 0.566
+    WO2: 0.165
+    WO3: 0.274
+    qos_overrides:
+      /parameter_events:
+        publisher:
+          depth: 1000
+          durability: volatile
+          history: keep_last
+          reliability: reliable
+    use_sim_time: false
