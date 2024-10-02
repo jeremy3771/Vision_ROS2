@@ -7,6 +7,7 @@ import Jetson.GPIO as GPIO
 
 from geometry_msgs.msg import Twist
 from rclpy.qos import QoSProfile
+from rclpy.executors import MultiThreadedExecutor
 
 if os.name == 'nt':
     import msvcrt
@@ -14,9 +15,8 @@ else:
     import termios
     import tty
 
-gun_pin = 8
-laser_pin = 35
-laser_on = False
+gun_pin = 13
+laser_pin = 22
 
 MAX_LIN_VEL = 1.20
 MAX_ANG_VEL = 1.00
@@ -76,15 +76,16 @@ def check_linear_limit_velocity(velocity):
 def check_angular_limit_velocity(velocity):
     return constrain(velocity, -MAX_ANG_VEL, MAX_ANG_VEL)
 
-
 def main():
     settings = None
     if os.name != 'nt':
         settings = termios.tcgetattr(sys.stdin)
 
     GPIO.setmode(GPIO.BOARD)
-    GPIO.setup(laser_pin, GPIO.OUT, initial=GPIO.LOW)
-    GPIO.setup(gun_pin, GPIO.OUT, initial=GPIO.LOW)
+    GPIO.setup(laser_pin, GPIO.OUT)
+    GPIO.setup(gun_pin, GPIO.OUT)
+    GPIO.output(laser_pin, GPIO.LOW)
+    GPIO.output(gun_pin, GPIO.LOW)
 
     rclpy.init()
 
@@ -92,9 +93,20 @@ def main():
     node = rclpy.create_node('teleop_keyboard')
     pub = node.create_publisher(Twist, 'cmd_vel', qos)
 
+    pole_msg = String()
+    node_pole = rclpy.create_node('control_pole')
+    pub_pole = node_pole.create_publisher(String, '/stairs_check', qos)
+
     status = 0
     target_linear_velocity = 0.0
     target_angular_velocity = 0.0
+
+    executor = MultiThreadedExecutor()
+    executor.add_node(node_wheel)
+    executor.add_node(node_pole)
+
+    thread = threading.Thread(target=executor.spin)
+    thread.start()
 
     try:
         print(msg)
@@ -126,11 +138,36 @@ def main():
                 target_angular_velocity = 0.0
                 control_angular_velocity = 0.0
                 print_vels(target_linear_velocity, target_angular_velocity)
+            elif key == 'e' or key == 'E':
+                pole_msg.data = 'over'
+                pub_pole.publish(pole_msg)
+                print("Successfully sent the msg for pole")
+            elif key == 'q' or key == 'Q':
+                pole_msg.data = 'back'
+                pub_pole.publish(pole_msg)
+                print("Successfully sent the msg for pole")
+            elif key == 'i' or key == 'I':
+                pole_msg.data = 'linear'
+                pub_pole.publish(pole_msg)
+                print("Successfully sent the msg for pole")
+            elif key == 'o' or key == 'O':
+                pole_msg.data = 'linear_up'
+                pub_pole.publish(pole_msg)
+                print("Successfully sent the msg for pole")
             elif key == 'l' or key == 'L':
                 if (laser_on):
                     GPIO.output(laser_pin, GPIO.LOW)
                 else:
                     GPIO.output(laser_pin, GPIO.HIGH)
+            elif key == 'g' or key == 'G':
+                if (gun_on):
+                    GPIO.output(gun_pin, GPIO.LOW)
+                    gun_on = False
+                    print("Gun off")
+                else:
+                    GPIO.output(gun_pin, GPIO.HIGH)
+                    gun_on = True
+                    print("Gun on")
             else:
                 if (key == '\x03'):
                     break
@@ -165,9 +202,14 @@ def main():
 
         pub.publish(twist)
 
+        node_wheel.destroy_node()
+        node_pole.destroy_node()
+        rclpy.shutdown()
+        GPIO.cleanup()
+
+
         if os.name != 'nt':
             termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
-
 
 if __name__ == '__main__':
     main()
