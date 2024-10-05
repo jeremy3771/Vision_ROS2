@@ -105,7 +105,7 @@ def main():
     target_angular_velocity = 0.0
 
     executor = MultiThreadedExecutor()
-    executor.add_node(node_wheel)
+    executor.add_node(node)
     executor.add_node(node_pole)
 
     thread = threading.Thread(target=executor.spin)
