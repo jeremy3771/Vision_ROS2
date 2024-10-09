@@ -1,10 +1,10 @@
 /DDSM115:
   ros__parameters:
-    AW: 0.39
-    WD: 0.1
-    WO1: 0.566
-    WO2: 0.165
-    WO3: 0.274
+    AW: 0.55
+    WD: 0.13
+    WO1: 0.44
+    WO2: 0.0
+    WO3: 0.46
     qos_overrides:
       /parameter_events:
         publisher:
@@ -16,11 +16,11 @@
 
 /dynamixel_controller:
   ros__parameters:
-    AW: 0.39
-    WD: 0.1
-    WO1: 0.566
-    WO2: 0.165
-    WO3: 0.274
+    AW: 0.55
+    WD: 0.13
+    WO1: 0.44
+    WO2: 0.0
+    WO3: 0.46
     qos_overrides:
       /parameter_events:
         publisher:
